@@ -31,15 +31,17 @@ void setup() {
 
 void loop() {
 
-    // TODO 7:
-    // Read humidity value from sensor
+    float humidity = dht.readHumidity();
 
-    // TODO 8:
-    // Read temperature value from sensor
+    float temperature = dht.readTemperature();
 
     // TODO 9:
     // Check if either reading failed using isnan()
     // If failed, print error message and return
+    if (isnan(humidity) || isnan(temperature)) {
+        Serial.println("Failed to read from DHT sensor!");
+        return;
+    }
 
     // TODO 10:
     // Print formatted temperature and humidity values
