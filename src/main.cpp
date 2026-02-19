@@ -1,54 +1,72 @@
 #include <Arduino.h>
 /**
- * @file main.ino
- * @brief Embedded Temperature and Humidity Monitoring using DHT11
- * @author YOUR_NAME
- * @date YYYY-MM-DD
+ * @file main.cpp
+ * @brief Embedded Temperature and Humidity Monitor using the DHT11 sensor
+ * @author shre-coder638(Shreyash Shankar)
+ * @date 2026-02-17
  *
  * @details
  * This program reads environmental data from the DHT11 sensor
- * and displays temperature and humidity values on Serial Monitor.
- * Students must complete the TODO sections.
+ * and displays temperature and humidity values on the Serial Monitor.
+ * Readings occur every 2 seconds. Designed as a simple educational example
+ * for embedded monitoring with Arduino.
  */
 
 #include <DHT.h>
 
-// TODO 1:
-// Define the DHT data pin (Use digital pin 2)
+#define DHTPIN 2
 
-// TODO 2:
-// Define the DHT sensor type (DHT11)
+#define DHTTYPE DHT11
 
-// TODO 3:
-// Create a DHT object using the defined pin and sensor type
+DHT dht(DHTPIN, DHTTYPE);
 
+/**
+ * @brief Initialize peripherals and Serial output.
+ *
+ * Sets up Serial at 9600 baud, initializes the DHT sensor library,
+ * and prints a startup banner to the Serial Monitor.
+ *
+ * This function is called once by the Arduino core during boot.
+ */
 void setup() {
 
-    // TODO 4:
-    // Initialize Serial communication (9600 baud rate)
+    Serial.begin(9600);
+    dht.begin();
 
-    // TODO 5:
-    // Initialize the DHT sensor
+    Serial.println("DHT11 Temperature and Humidity Monitor");
+    Serial.println("System Initialized...");
 
-    // TODO 6:
-    // Print a system initialization message
 }
 
+/**
+ * @brief Main loop: read sensor and print values.
+ *
+ * Reads humidity and temperature from the DHT11 sensor. If a read fails
+ * (returns NaN) an error message is printed and the current iteration ends.
+ * On success, humidity (%) and temperature (°C) are printed to Serial.
+ * The function then delays for 2000 ms before repeating.
+ *
+ * This function runs repeatedly after setup() and blocks for the duration
+ * of the delay(2000) call.
+ */
 void loop() {
 
-    // TODO 7:
-    // Read humidity value from sensor
+    float humidity = dht.readHumidity();
 
-    // TODO 8:
-    // Read temperature value from sensor
+    float temperature = dht.readTemperature();
 
-    // TODO 9:
-    // Check if either reading failed using isnan()
-    // If failed, print error message and return
+    if (isnan(humidity) || isnan(temperature)) {
+        Serial.println("Failed to read from DHT sensor!");
+        return;
+    }
 
-    // TODO 10:
-    // Print formatted temperature and humidity values
+    Serial.print("Humidity: ");
+    Serial.print(humidity);
+    Serial.print(" %\t");
 
-    // TODO 11:
-    // Add a 2-second delay before next reading
+    Serial.print("Temperature: ");
+    Serial.print(temperature);
+    Serial.println(" °C");
+
+    delay(2000);
 }
